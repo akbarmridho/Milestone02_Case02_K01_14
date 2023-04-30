@@ -1,5 +1,4 @@
 import {createPool, PoolConnection} from 'mariadb'
-import {faker} from '@faker-js/faker'
 import {
   seedJenisSeleksi,
   seedLulusSeleksi,

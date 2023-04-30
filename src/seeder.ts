@@ -48,7 +48,7 @@ export const seedTidakLulusAdministrasi = async (conn: PoolConnection) => {
   }
 }
 
-const seedWawancara = async (conn: PoolConnection, id_mahasiswa: number, pass: boolean) => {
+export const seedWawancara = async (conn: PoolConnection, id_mahasiswa: number, pass: boolean) => {
   const pewawancara = await conn.query(`SELECT id_pewawancara
                                         from pewawancara`) as { id_pewawancara: number }[]
   const wawancara = generateWawancara(pass)
@@ -80,7 +80,7 @@ const seedWawancara = async (conn: PoolConnection, id_mahasiswa: number, pass: b
   })
 }
 
-const seedSeleksiKesehatan = async (conn: PoolConnection, id_mahasiswa: number, pass: boolean) => {
+export const seedSeleksiKesehatan = async (conn: PoolConnection, id_mahasiswa: number, pass: boolean) => {
   const dokter = await conn.query(`SELECT id_dokter
                                    from dokter`) as { id_dokter: number }[]
   const kesehatan = generateSeleksiKesehatan(pass)
@@ -106,7 +106,7 @@ const seedSeleksiKesehatan = async (conn: PoolConnection, id_mahasiswa: number, 
   ])
 }
 
-const seedPsikotes = async (conn: PoolConnection, id_mahasiswa: number, pass: boolean) => {
+export const seedPsikotes = async (conn: PoolConnection, id_mahasiswa: number, pass: boolean) => {
 
   const pengawas = await conn.query(`SELECT id_pengawas
                                      from pengawas`) as { id_pengawas: number }[]
@@ -206,19 +206,19 @@ export const seedTidakLulusSeleksi = async (conn: PoolConnection) => {
     })
 
     if (i % 3 === 0) {
+      await seedWawancara(conn, id_mahasiswa, false)
       await seedPsikotes(conn, id_mahasiswa, false)
       await seedSeleksiKesehatan(conn, id_mahasiswa, false)
-      await seedWawancara(conn, id_mahasiswa, false)
     } else if (i % 3 === 1) {
       const passes = [false, false, true].sort((a, b) => 0.5 - Math.random())
+      await seedWawancara(conn, id_mahasiswa, passes[2])
       await seedPsikotes(conn, id_mahasiswa, passes[0])
       await seedSeleksiKesehatan(conn, id_mahasiswa, passes[1])
-      await seedWawancara(conn, id_mahasiswa, passes[2])
     } else {
       const passes = [false, true, true].sort((a, b) => 0.5 - Math.random())
+      await seedWawancara(conn, id_mahasiswa, passes[2])
       await seedPsikotes(conn, id_mahasiswa, passes[0])
       await seedSeleksiKesehatan(conn, id_mahasiswa, passes[1])
-      await seedWawancara(conn, id_mahasiswa, passes[2])
     }
   }
 }
@@ -258,9 +258,9 @@ export const seedLulusSeleksi = async (conn: PoolConnection) => {
           ]).catch(e => console.log(e))
     })
 
+    await seedWawancara(conn, id_mahasiswa, true)
     await seedPsikotes(conn, id_mahasiswa, true)
     await seedSeleksiKesehatan(conn, id_mahasiswa, true)
-    await seedWawancara(conn, id_mahasiswa, true)
 
     const beasiswa = generatePenerimaBeasiswa()
 

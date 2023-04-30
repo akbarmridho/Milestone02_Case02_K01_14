@@ -104,3 +104,40 @@ CREATE TABLE psikotes (
     FOREIGN KEY (id_pengawas) references pengawas(id_pengawas)
 );
 
+ALTER TABLE wawancara ADD CONSTRAINT wawancara_mahasiswa_unique UNIQUE (id_mahasiswa);
+
+ALTER TABLE psikotes ADD CONSTRAINT psikotes_mahasiswa_unique UNIQUE (id_mahasiswa);
+
+ALTER TABLE seleksi_kesehatan ADD CONSTRAINT seleksi_kesehatan_mahasiswa_unique UNIQUE (id_mahasiswa);
+
+CREATE TRIGGER check_has_wawancara BEFORE INSERT ON psikotes
+    FOR EACH ROW
+    BEGIN
+        DECLARE wawancara_count INT;
+
+        SELECT COUNT(*)
+            INTO wawancara_count
+        FROM wawancara
+            WHERE wawancara.id_mahasiswa = NEW.id_mahasiswa;
+
+        IF wawancara_count != 1 THEN
+            SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'mahasiswa harus melalui tahap wawancara terlebih dahulu';
+        END IF;
+    END;
+
+CREATE TRIGGER check_has_psikotes BEFORE INSERT ON seleksi_kesehatan
+    FOR EACH ROW
+BEGIN
+    DECLARE psikotes_count INT;
+
+    SELECT COUNT(*)
+    INTO psikotes_count
+    FROM psikotes
+    WHERE psikotes.id_mahasiswa = NEW.id_mahasiswa;
+
+    IF psikotes_count != 1 THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'mahasiswa harus melalui tahap psikotes terlebih dahulu';
+    END IF;
+END;
