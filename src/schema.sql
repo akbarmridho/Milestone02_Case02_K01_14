@@ -141,3 +141,48 @@ BEGIN
             SET MESSAGE_TEXT = 'mahasiswa harus melalui tahap psikotes terlebih dahulu';
     END IF;
 END;
+
+ create view data_kelulusan_seleksi as (
+    Select "Seleksi Dokumen" as seleksi, 
+        count(distinct id_mahasiswa) as total, 
+        'null' as nilai_avg 
+        'null' as nilai_max, 
+        'null' as nilai_min, 
+    from lampiran 
+    where id_mahasiswa in (
+        select id_mahasiswa 
+        from lampiran 
+        group by id_mahasiswa 
+        having count(id_lampiran) = 3
+    )
+) 
+union (
+    select "seleksi wawancara" as seleksi,
+        count(id_mahasiswa) as total, 
+        avg(nilai) as nilai_rata 
+        max(nilai) as nilai_maksimum, 
+        min(nilai) as nilai_minimum, 
+    from wawancara, jenis_seleksi 
+    where jenis_seleksi = 'wawancara' 
+        and nilai >= passing_grade
+) 
+union (
+    select "seleksi psikotes" as seleksi,
+        count(id_mahasiswa) as total, 
+        avg(nilai) as nilai_rata 
+        max(nilai) as nilai_maksimum, 
+        min(nilai) as nilai_minimum, 
+    from psikotes, jenis_seleksi 
+    where jenis_seleksi = 'psikotes' 
+        and nilai >= passing_grade
+) 
+union ( 
+    select "seleksi kesehatan" as seleksi,
+        count(id_mahasiswa) as total, 
+        avg(nilai) as nilai_rata 
+        max(nilai) as nilai_maksimum, 
+        min(nilai) as nilai_minimum, 
+    from seleksi_kesehatan, jenis_seleksi 
+    where jenis_seleksi = 'kesehatan' 
+        and nilai >= passing_grade
+);
