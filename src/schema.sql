@@ -142,47 +142,47 @@ BEGIN
     END IF;
 END;
 
- create view data_kelulusan_seleksi as (
-    Select "Seleksi Dokumen" as seleksi, 
-        count(distinct id_mahasiswa) as total, 
-        'null' as nilai_avg, 
-        'null' as nilai_max, 
-        'null' as nilai_min 
-    from lampiran 
-    where id_mahasiswa in (
-        select id_mahasiswa 
-        from lampiran 
-        group by id_mahasiswa 
-        having count(id_lampiran) = 3
+CREATE VIEW data_kelulusan_seleksi AS (
+    SELECT "Seleksi Dokumen" AS jenis_seleksi, 
+        COUNT(distinct id_mahasiswa) AS total, 
+        'null' AS nilai_avg, 
+        'null' AS nilai_max, 
+        'null' AS nilai_min 
+    FROM lampiran 
+    WHERE id_mahasiswa IN (
+        SELECT id_mahasiswa 
+        FROM lampiran 
+        GROUP BY id_mahasiswa 
+        HAVING COUNT(id_lampiran) = 3
     )
 ) 
-union (
-    select "seleksi wawancara" as seleksi,
-        count(id_mahasiswa) as total, 
-        avg(nilai) as nilai_rata, 
-        max(nilai) as nilai_maksimum, 
-        min(nilai) as nilai_minimum 
-    from wawancara, jenis_seleksi 
-    where jenis_seleksi = 'wawancara' 
-        and nilai >= passing_grade
+UNION (
+    SELECT "Seleksi Wawancara" AS jenis_seleksi,
+        COUNT(id_mahasiswa) AS total, 
+        AVG(nilai) AS nilai_avg, 
+        MAX(nilai) AS nilai_max, 
+        MIN(nilai) AS nilai_min 
+    FROM wawancara, jenis_seleksi 
+    WHERE jenis_seleksi = 'wawancara' 
+        AND nilai >= passing_grade
 ) 
-union (
-    select "seleksi psikotes" as seleksi,
-        count(id_mahasiswa) as total, 
-        avg(nilai) as nilai_rata, 
-        max(nilai) as nilai_maksimum, 
-        min(nilai) as nilai_minimum 
-    from psikotes, jenis_seleksi 
-    where jenis_seleksi = 'psikotes' 
-        and nilai >= passing_grade
+UNION (
+    SELECT "Seleksi Psikotes" AS jenis_seleksi,
+        COUNT(id_mahasiswa) AS total, 
+        AVG(nilai) AS nilai_avg, 
+        MAX(nilai) AS nilai_max, 
+        MIN(nilai) AS nilai_min 
+    FROM psikotes, jenis_seleksi 
+    WHERE jenis_seleksi = 'psikotes' 
+        AND nilai >= passing_grade
 ) 
-union ( 
-    select "seleksi kesehatan" as seleksi,
-        count(id_mahasiswa) as total, 
-        avg(nilai) as nilai_rata, 
-        max(nilai) as nilai_maksimum, 
-        min(nilai) as nilai_minimum 
-    from seleksi_kesehatan, jenis_seleksi 
-    where jenis_seleksi = 'kesehatan' 
-        and nilai >= passing_grade
+UNION ( 
+    SELECT "Seleksi Kesehatan" AS jenis_seleksi,
+        COUNT(id_mahasiswa) AS total, 
+        AVG(nilai) AS nilai_avg, 
+        MAX(nilai) as nilai_max, 
+        MIN(nilai) as nilai_min 
+    FROM seleksi_kesehatan, jenis_seleksi 
+    WHERE jenis_seleksi = 'kesehatan' 
+        AND nilai >= passing_grade
 );
