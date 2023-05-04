@@ -24,7 +24,7 @@ DROP TABLE IF EXISTS `data_kelulusan_seleksi`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 /*!50001 CREATE VIEW `data_kelulusan_seleksi` AS SELECT
- 1 AS `seleksi`,
+ 1 AS `jenis_seleksi`,
   1 AS `total`,
   1 AS `nilai_avg`,
   1 AS `nilai_max`,
@@ -2142,7 +2142,7 @@ UNLOCK TABLES;
 /*!50001 SET collation_connection      = utf8mb4_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `data_kelulusan_seleksi` AS (select 'Seleksi Dokumen' AS `seleksi`,count(distinct `lampiran`.`id_mahasiswa`) AS `total`,'null' AS `nilai_avg`,'null' AS `nilai_max`,'null' AS `nilai_min` from `lampiran` where `lampiran`.`id_mahasiswa` in (select `lampiran`.`id_mahasiswa` from `lampiran` group by `lampiran`.`id_mahasiswa` having count(`lampiran`.`id_lampiran`) = 3)) union (select 'seleksi wawancara' AS `seleksi`,count(`wawancara`.`id_mahasiswa`) AS `total`,avg(`wawancara`.`nilai`) AS `nilai_rata`,max(`wawancara`.`nilai`) AS `nilai_maksimum`,min(`wawancara`.`nilai`) AS `nilai_minimum` from (`wawancara` join `jenis_seleksi`) where `jenis_seleksi`.`jenis_seleksi` = 'wawancara' and `wawancara`.`nilai` >= `jenis_seleksi`.`passing_grade`) union (select 'seleksi psikotes' AS `seleksi`,count(`psikotes`.`id_mahasiswa`) AS `total`,avg(`psikotes`.`nilai`) AS `nilai_rata`,max(`psikotes`.`nilai`) AS `nilai_maksimum`,min(`psikotes`.`nilai`) AS `nilai_minimum` from (`psikotes` join `jenis_seleksi`) where `jenis_seleksi`.`jenis_seleksi` = 'psikotes' and `psikotes`.`nilai` >= `jenis_seleksi`.`passing_grade`) union (select 'seleksi kesehatan' AS `seleksi`,count(`seleksi_kesehatan`.`id_mahasiswa`) AS `total`,avg(`seleksi_kesehatan`.`nilai`) AS `nilai_rata`,max(`seleksi_kesehatan`.`nilai`) AS `nilai_maksimum`,min(`seleksi_kesehatan`.`nilai`) AS `nilai_minimum` from (`seleksi_kesehatan` join `jenis_seleksi`) where `jenis_seleksi`.`jenis_seleksi` = 'kesehatan' and `seleksi_kesehatan`.`nilai` >= `jenis_seleksi`.`passing_grade`) */;
+/*!50001 VIEW `data_kelulusan_seleksi` AS (select 'Seleksi Dokumen' AS `jenis_seleksi`,count(distinct `lampiran`.`id_mahasiswa`) AS `total`,'null' AS `nilai_avg`,'null' AS `nilai_max`,'null' AS `nilai_min` from `lampiran` where `lampiran`.`id_mahasiswa` in (select `lampiran`.`id_mahasiswa` from `lampiran` group by `lampiran`.`id_mahasiswa` having count(`lampiran`.`id_lampiran`) = 3)) union (select 'Seleksi Wawancara' AS `jenis_seleksi`,count(`wawancara`.`id_mahasiswa`) AS `total`,avg(`wawancara`.`nilai`) AS `nilai_avg`,max(`wawancara`.`nilai`) AS `nilai_max`,min(`wawancara`.`nilai`) AS `nilai_min` from (`wawancara` join `jenis_seleksi`) where `jenis_seleksi`.`jenis_seleksi` = 'wawancara' and `wawancara`.`nilai` >= `jenis_seleksi`.`passing_grade`) union (select 'Seleksi Psikotes' AS `jenis_seleksi`,count(`psikotes`.`id_mahasiswa`) AS `total`,avg(`psikotes`.`nilai`) AS `nilai_avg`,max(`psikotes`.`nilai`) AS `nilai_max`,min(`psikotes`.`nilai`) AS `nilai_min` from (`psikotes` join `jenis_seleksi`) where `jenis_seleksi`.`jenis_seleksi` = 'psikotes' and `psikotes`.`nilai` >= `jenis_seleksi`.`passing_grade`) union (select 'Seleksi Kesehatan' AS `jenis_seleksi`,count(`seleksi_kesehatan`.`id_mahasiswa`) AS `total`,avg(`seleksi_kesehatan`.`nilai`) AS `nilai_avg`,max(`seleksi_kesehatan`.`nilai`) AS `nilai_max`,min(`seleksi_kesehatan`.`nilai`) AS `nilai_min` from (`seleksi_kesehatan` join `jenis_seleksi`) where `jenis_seleksi`.`jenis_seleksi` = 'kesehatan' and `seleksi_kesehatan`.`nilai` >= `jenis_seleksi`.`passing_grade`) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -2156,4 +2156,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-05-04  2:59:18
+-- Dump completed on 2023-05-04 20:06:27
