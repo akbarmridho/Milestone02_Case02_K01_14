@@ -186,3 +186,41 @@ UNION (
     WHERE jenis_seleksi = 'kesehatan' 
         AND nilai >= passing_grade
 );
+
+CREATE TRIGGER update_passing_grade_psikotes_i AFTER INSERT ON psikotes
+    FOR EACH ROW
+    UPDATE jenis_seleksi SET passing_grade = (SELECT AVG(nilai) FROM psikotes) WHERE jenis_seleksi = 'psikotes';
+    
+CREATE TRIGGER update_passing_grade_psikotes_u AFTER UPDATE ON psikotes
+    FOR EACH ROW
+    UPDATE jenis_seleksi SET passing_grade = (SELECT AVG(nilai) FROM psikotes) WHERE jenis_seleksi = 'psikotes';
+    
+CREATE TRIGGER update_passing_grade_psikotes_d AFTER DELETE ON psikotes
+    FOR EACH ROW
+    UPDATE jenis_seleksi SET passing_grade = (SELECT AVG(nilai) FROM psikotes) WHERE jenis_seleksi = 'psikotes';
+    
+
+CREATE TRIGGER update_passing_grade_seleksi_kesehatan_i AFTER INSERT ON seleksi_kesehatan
+    FOR EACH ROW
+    UPDATE jenis_seleksi SET passing_grade = (SELECT AVG(nilai) FROM seleksi_kesehatan) WHERE jenis_seleksi = 'kesehatan';
+
+CREATE TRIGGER update_passing_grade_seleksi_kesehatan_u AFTER UPDATE ON seleksi_kesehatan
+    FOR EACH ROW
+    UPDATE jenis_seleksi SET passing_grade = (SELECT AVG(nilai) FROM seleksi_kesehatan) WHERE jenis_seleksi = 'kesehatan';
+
+CREATE TRIGGER update_passing_grade_seleksi_kesehatan_d AFTER DELETE ON seleksi_kesehatan
+    FOR EACH ROW
+    UPDATE jenis_seleksi SET passing_grade = (SELECT AVG(nilai) FROM seleksi_kesehatan) WHERE jenis_seleksi = 'kesehatan';
+    
+
+CREATE TRIGGER update_passing_grade_wawancara_i AFTER INSERT ON wawancara
+    FOR EACH ROW
+    UPDATE jenis_seleksi SET passing_grade = (SELECT AVG(nilai) FROM wawancara) WHERE jenis_seleksi = 'wawancara';
+
+CREATE TRIGGER update_passing_grade_wawancara_U AFTER UPDATE ON wawancara
+    FOR EACH ROW
+    UPDATE jenis_seleksi SET passing_grade = (SELECT AVG(nilai) FROM wawancara) WHERE jenis_seleksi = 'wawancara';
+
+CREATE TRIGGER update_passing_grade_wawancara_d AFTER DELETE ON wawancara
+    FOR EACH ROW
+    UPDATE jenis_seleksi SET passing_grade = (SELECT AVG(nilai) FROM wawancara) WHERE jenis_seleksi = 'wawancara';
